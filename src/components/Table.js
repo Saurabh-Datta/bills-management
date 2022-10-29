@@ -19,10 +19,12 @@ import Tooltip from '@mui/material/Tooltip';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { Autocomplete, TextField } from '@mui/material';
+import { Autocomplete, TextField, Button } from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
 import { useSelector, useDispatch } from 'react-redux';
-import { selectBills, removeItem } from '../features/bills/billsReducer';
+import { selectBills, removeItem, editItem } from '../features/bills/billsReducer';
+import { EditForm } from '../components';
+
 
 
 function descendingComparator(a, b, orderBy) {
@@ -85,6 +87,12 @@ const headCells = [
     numeric: false,
     disablePadding: false,
     label: 'Date',
+  },
+  {
+    id: 'edit',
+    numeric: false,
+    disablePadding: false,
+    label: 'Edit',
   },
 ];
 
@@ -199,6 +207,10 @@ export default function EnhancedTable() {
     setSelected(newSelected);
   };
 
+  const setNull = () => {
+    setEditing(null)
+  }
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -217,10 +229,12 @@ export default function EnhancedTable() {
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
-
+  const [editing, setEditing] = React.useState(null);
   return (
     <Box sx={{ width: '100%' }}>
+      {editing!==null?<EditForm func={()=> {setNull()}} state={editing} editItem = {(item) => {dispatch(editItem({id:editing.id,data:item}))}}/>:null}
       <Paper sx={{ width: '100%', mb: 2 }}>
+
         <Toolbar
         sx={{
             pl: { sm: 2 },
@@ -334,6 +348,7 @@ export default function EnhancedTable() {
                       <TableCell align="right">{row.amount}</TableCell>
                       <TableCell align="right">{row.category}</TableCell>
                       <TableCell align="right">{row.date}</TableCell>
+                      <TableCell align='right'><Button onClick={()=>{setEditing(row)}}>Edit</Button></TableCell>
                     </TableRow>
                   );
                 })}

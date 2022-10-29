@@ -6,9 +6,7 @@ const findTotal = (bills) => {
     const total = {};
     let data = [];
     bills.map(bill => {
-        console.log(bill.date);
         total[bill.date] = total[bill.date]?total[bill.date]+parseInt(bill.amount):parseInt(bill.amount);
-        console.log(total[bill.date]);
     });
     let sortedTotal = {}
     Object.keys(total).sort().forEach(a=>sortedTotal[a]=total[a]);

@@ -4,13 +4,13 @@ import { Autocomplete, TextField, Button } from "@mui/material";
 import { useSelector } from "react-redux";
 import { selectBills } from "../features/bills/billsReducer";
 
-const getInitialValue = (id=null) => {
+const getInitialValue = () => {
   let uniqueID = uuidv4();
   const today = new Date();
   today.setDate(today.getDate());
   var initialDate = today.toISOString().substring(0, 10);
   return {
-    id: id?id:uniqueID,
+    id: uniqueID,
     description: "",
     category: "",
     date: initialDate,
@@ -28,12 +28,14 @@ const BillForm = ({ params }) => {
   let uniqueCategories = [...new Set(categories)];
 
   return (
-    <div>
+    <div style={{display: 'flex', flexDirection:'row', justifyContent: 'space-around', margin: 22, backgroundColor: '#FFF', paddingTop: 25, paddingBottom: 25}}>
+      <h2>Add Bill</h2>
       <TextField
         label="Description"
         variant="outlined"
         required
         value={response.description}
+        style={{width:250}}
         onChange={(e) => {
           setResponse({...response, description: e.target.value});
         }}
@@ -46,6 +48,7 @@ const BillForm = ({ params }) => {
             {...params}
             label="Category"
             required
+            style={{width:250}}
             value={response.category}
             onChange={(e) => {
               setResponse({...response, category: e.target.value});
@@ -58,6 +61,7 @@ const BillForm = ({ params }) => {
         variant="outlined"
         required
         type="number"
+        style={{width:250}}
         value={response.amount}
         onChange={(e) => {
           setResponse({...response, amount: e.target.value});
@@ -68,6 +72,7 @@ const BillForm = ({ params }) => {
         name="date"
         required
         label="Date"
+        style={{width:250}}
         value={response.date}
         onChange={(e) => {
           setResponse({...response, date: e.target.value});
@@ -79,9 +84,7 @@ const BillForm = ({ params }) => {
         onClick={() => {
           params(response);
           setResponse({...response, id: uuidv4()});
-          console.log("something happened!");
-          console.log(response.id);
-          console.log(response.date);
+          setResponse(getInitialValue());
         }}
       >
         Add
